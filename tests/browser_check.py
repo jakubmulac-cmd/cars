@@ -99,6 +99,21 @@ def main():
                 page.locator('#connectors .connector-row').first.wait_for()
                 assert page.locator('#connectors .connector-row').count() == 3
                 seed = args.data_dir / 'import/fleet_context_2026-10-11.json'
+                # Reverse proxies may return HTML or plain text instead of JSON.
+                # The import screen must explain the failure and remain usable.
+                page.route('**/api/imports/preview', lambda route: route.fulfill(status=413,content_type='text/html',body='<html>proxy-only private content</html>'))
+                page.locator('#import-file').set_input_files(str(seed))
+                page.get_by_text('HTTP 413',exact=False).wait_for()
+                assert 'proxy-only private content' not in page.locator('#page-content').inner_text()
+                assert page.locator('[data-action="commit-import"]').count() == 0
+                page.unroute('**/api/imports/preview')
+                page.locator('#import-file').set_input_files([])
+                page.route('**/api/imports/preview', lambda route: route.fulfill(status=500,content_type='text/plain',body='private traceback'))
+                page.locator('#import-file').set_input_files(str(seed))
+                page.get_by_text('HTTP 500',exact=False).wait_for()
+                assert 'private traceback' not in page.locator('#page-content').inner_text()
+                page.unroute('**/api/imports/preview')
+                page.locator('#import-file').set_input_files([])
                 page.locator('#import-file').set_input_files(str(seed))
                 page.get_by_text('Validace prošla',exact=False).wait_for()
                 page.locator('[data-action="commit-import"]').click()
@@ -128,7 +143,7 @@ def main():
                 assert not page.locator('#application').is_visible()
                 assert not errors, '\n'.join(errors)
                 browser.close()
-                print('Browser checks passed: authentication, 31 records, search, four detail tabs, manual reading, task assignment, insurance sums, 21 sources, disabled connectors, repeat import, export, mobile layout, logout; no JavaScript errors.')
+                print('Browser checks passed: authentication, 31 records, search, four detail tabs, manual reading, task assignment, insurance sums, 21 sources, disabled connectors, clear proxy/server import errors and successful retry, repeat import, export, mobile layout, logout; no JavaScript errors.')
         finally:
             process.terminate()
             process.wait(timeout=10)

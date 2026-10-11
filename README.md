@@ -17,6 +17,8 @@ Jde o **první soukromý přehled**, nikoli celý automatizovaný systém z šir
 
 ## Spuštění
 
+Pro spuštění přímo v prohlížeči na GitHubu použijte [návod pro Codespaces](docs/CODESPACES.md), včetně importu a řešení chyb.
+
 Potřeba: Python 3.12 a `uv`. Závislosti jsou zamčené v `uv.lock`; samostatná kompilace frontendu není potřeba. Použijte stávající checkout; každá cloudová úloha je už izolovaná a další Git worktree není potřeba.
 
 ```bash
@@ -51,12 +53,14 @@ Při změně datového formátu nejdřív upravte schéma a importní pravidla. 
 ```bash
 # Přístup, hesla, cookie relace, omezení pokusů a ochrana požadavků:
 .venv/bin/python -m unittest tests.test_app.AuthenticationTests -v
+# Odpovědi přístupové brány a serverové chyby při importu (Node.js 18+):
+node --test tests/test_api.mjs
 # Všechny kontroly včetně skutečného snímku (data nepatří do Gitu):
 FLEET_TEST_SNAPSHOT=/workspace/fleet-private/import/fleet_context_2026-10-11.json \
   .venv/bin/python -m unittest discover -v
 ```
 
-Bez `FLEET_TEST_SNAPSHOT` se testy skutečného snímku výslovně přeskočí. V cloudovém prostředí proběhlo všech 15 testů s přiloženými podklady. Testy používají dočasné databáze; žádné testovací heslo, odečet ani uzavření úkolu se nevkládá do uživatelské databáze.
+Bez `FLEET_TEST_SNAPSHOT` se testy skutečného snímku výslovně přeskočí. Testy používají dočasné databáze; žádné testovací heslo, odečet ani uzavření úkolu se nevkládá do uživatelské databáze.
 
 Volitelná kontrola v prohlížeči vyžaduje systémový Playwright a Chromium. Testuje dočasnou kopii databáze; snímky obrazovky ukládá **mimo repozitář** a mohou obsahovat soukromé informace.
 

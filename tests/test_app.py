@@ -2,6 +2,7 @@ import copy
 import json
 import os
 import secrets
+import sqlite3
 import tempfile
 import unittest
 from decimal import Decimal
@@ -76,6 +77,19 @@ class AuthenticationTests(IsolatedDatabase):
 
     def test_unknown_host_rejected(self):
         self.assertEqual(self.client.get("/", headers={"Host": "unrelated.example"}).status_code, 400)
+
+    def test_unhandled_import_error_returns_json_without_private_details(self):
+        self.login()
+        with patch('fleet.main.stage', side_effect=sqlite3.OperationalError('sensitive exception details')):
+            with self.assertLogs('fleet', level='ERROR') as logs:
+                response = TestClient(app, raise_server_exceptions=False).post(
+                    '/api/imports/preview', json={}, cookies=self.client.cookies)
+        self.assertEqual(response.status_code,500)
+        self.assertTrue(response.headers['content-type'].startswith('application/json'))
+        self.assertEqual(response.headers['cache-control'],'no-store')
+        self.assertTrue(response.json()['request_id'])
+        self.assertNotIn('sensitive exception details',response.text)
+        self.assertNotIn('sensitive exception details',''.join(logs.output))
 
 
 @unittest.skipUnless(SNAPSHOT, "Pro kontrolu skutečného snímku nastavte FLEET_TEST_SNAPSHOT; soukromá data nejsou v Gitu")

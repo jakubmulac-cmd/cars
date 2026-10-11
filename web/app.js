@@ -1,4 +1,5 @@
 'use strict';
+import {request} from './api.mjs';
 const $ = (selector, root = document) => root.querySelector(selector);
 const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = value => new Intl.NumberFormat('cs-CZ', {maximumFractionDigits: 2}).format(value);
@@ -10,14 +11,7 @@ const pages = {overview:'Přehled',vehicles:'Vozidla',issues:'Úkoly',insurance:
 const evidenceNames = {insurer_confirmation:'Potvrzení pojišťovny o připsání a spárování',inspection_certificate:'Doklad o technické prohlídce',registration_record:'Aktuální registrační doklad / výpis',ownership_title:'Vlastnický nebo prodejní titul',supporting_document:'Doklad potvrzující splnění úkolu'};
 
 async function api(path, options = {}) {
-  const response = await fetch(`/api${path}`, {...options, headers:{'Content-Type':'application/json',...options.headers}, credentials:'same-origin'});
-  let body;
-  try {body = await response.json();} catch {throw new Error('Server nevrátil platnou odpověď.');}
-  if (!response.ok) {
-    if (response.status === 401 && !path.startsWith('/auth/')) await showAuth();
-    throw new Error(typeof body.detail === 'string' ? body.detail : 'Zkontrolujte vyplněné údaje.');
-  }
-  return body;
+  return request(path, options, showAuth);
 }
 function toast(text) {
   $('#toast').textContent = text;

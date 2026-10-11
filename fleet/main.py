@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import sqlite3
 import uuid
@@ -27,6 +28,16 @@ async def lifespan(app):
 
 app = FastAPI(title="Cars · soukromá evidence", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=os.environ.get("FLEET_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1],testserver").split(","))
+
+
+@app.exception_handler(Exception)
+async def server_error(request: Request, exc: Exception):
+    reference = uuid.uuid4().hex[:12]
+    # Log no request body, password, session cookie, or imported data.
+    logging.getLogger("fleet").error("Server error id=%s method=%s path=%s type=%s",
+                                   reference, request.method, request.url.path, type(exc).__name__)
+    return JSONResponse({"detail": "Při zpracování požadavku nastala chyba serveru. Zkontrolujte Terminál Codespaces.", "request_id": reference},
+                        status_code=500, headers={"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer"})
 
 
 @app.middleware("http")
