@@ -1,0 +1,1393 @@
+{
+  "type": "object",
+  "properties": {
+    "acquisitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "acquisition_amount": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "acquisition_currency": {
+            "type": "null"
+          },
+          "acquisition_date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "acquisition_document": {
+            "type": "null"
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "current_market_value": {
+            "type": "null"
+          },
+          "current_valuation_date": {
+            "type": "null"
+          },
+          "extra_cost_text": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "historical_value_2024": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "historical_value_source": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "legacy_acquisition_text": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "legacy_price_text": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "valuation_status": {
+            "type": "string"
+          },
+          "vat_basis": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "acquisition_amount",
+          "acquisition_currency",
+          "acquisition_date",
+          "acquisition_document",
+          "asset_id",
+          "current_market_value",
+          "current_valuation_date",
+          "extra_cost_text",
+          "historical_value_2024",
+          "historical_value_source",
+          "legacy_acquisition_text",
+          "legacy_price_text",
+          "notes",
+          "source_ids",
+          "valuation_status",
+          "vat_basis"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "billing_reconciliation": {
+      "type": "object",
+      "properties": {
+        "balance_as_of": {
+          "type": "string"
+        },
+        "cpp_credit": {
+          "type": "number"
+        },
+        "cpp_new_premium": {
+          "type": "number"
+        },
+        "cpp_old_prescriptions": {
+          "type": "number"
+        },
+        "cpp_payment_requested": {
+          "type": "number"
+        },
+        "cpp_q4": {
+          "type": "number"
+        },
+        "cpp_retro": {
+          "type": "number"
+        },
+        "due_date": {
+          "type": "string"
+        },
+        "insurer_settlement_confirmed": {
+          "type": "null"
+        },
+        "payment_notice_date": {
+          "type": "string"
+        },
+        "reminder_amount": {
+          "type": "number"
+        },
+        "reminder_as_of": {
+          "type": "string"
+        },
+        "reminder_deadline": {
+          "type": "string"
+        },
+        "settlement_evidence_status": {
+          "type": "string"
+        },
+        "triumph_hav_and_other": {
+          "type": "number"
+        },
+        "triumph_pov": {
+          "type": "number"
+        },
+        "triumph_total": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "balance_as_of",
+        "cpp_credit",
+        "cpp_new_premium",
+        "cpp_old_prescriptions",
+        "cpp_payment_requested",
+        "cpp_q4",
+        "cpp_retro",
+        "due_date",
+        "insurer_settlement_confirmed",
+        "payment_notice_date",
+        "reminder_amount",
+        "reminder_as_of",
+        "reminder_deadline",
+        "settlement_evidence_status",
+        "triumph_hav_and_other",
+        "triumph_pov",
+        "triumph_total"
+      ],
+      "additionalProperties": true
+    },
+    "data_quality_note": {
+      "type": "string"
+    },
+    "insurance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "anniversary_month_day": {
+            "type": "string"
+          },
+          "annual_premium": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "binding_km_limit": {
+            "type": "null"
+          },
+          "binding_km_status": {
+            "type": "string"
+          },
+          "broker": {
+            "type": "string"
+          },
+          "broker_contact": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "child_policy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "contract_end_confirmed": {
+            "type": "null"
+          },
+          "coverage": {
+            "type": "string"
+          },
+          "evidence_state": {
+            "type": "string"
+          },
+          "historic_binding": {
+            "type": "boolean"
+          },
+          "historic_coverage_2024": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "historic_declared_km_2024": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "historic_km_text": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "insurance_company": {
+            "type": "string"
+          },
+          "legacy_insurer": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "legacy_manual_check": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "legacy_period_from": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "legacy_period_to": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "legacy_policy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "legacy_policy_notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "operator": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "operator_ic": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "owner": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "owner_ic": {
+            "type": "string"
+          },
+          "paid_state": {
+            "type": "string"
+          },
+          "period_from": {
+            "type": "string"
+          },
+          "period_semantics": {
+            "type": "string"
+          },
+          "period_to": {
+            "type": "string"
+          },
+          "policy": {
+            "type": "string"
+          },
+          "policyholder": {
+            "type": "string"
+          },
+          "q4_premium": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "asset_id",
+          "evidence_state",
+          "historic_binding",
+          "historic_coverage_2024",
+          "historic_declared_km_2024",
+          "historic_km_text",
+          "legacy_insurer",
+          "legacy_manual_check",
+          "legacy_period_from",
+          "legacy_period_to",
+          "legacy_policy",
+          "legacy_policy_notes",
+          "source_ids"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "asset_id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "assigned_to": {
+            "type": "null"
+          },
+          "closed_at": {
+            "type": "null"
+          },
+          "closure_evidence": {
+            "type": "null"
+          },
+          "context": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "issue_id": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "state": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "asset_id",
+          "assigned_to",
+          "closed_at",
+          "closure_evidence",
+          "context",
+          "deadline",
+          "issue_id",
+          "priority",
+          "scope",
+          "source_ids",
+          "state",
+          "topic"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "native_sheet": {
+      "type": "object",
+      "properties": {
+        "account_email": {
+          "type": "string"
+        },
+        "folder_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "account_email",
+        "folder_id",
+        "id",
+        "title",
+        "url"
+      ],
+      "additionalProperties": true
+    },
+    "odometer_readings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "km": {
+            "type": "number"
+          },
+          "location": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "period": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "reading_id": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "verification": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "date",
+          "km",
+          "location",
+          "notes",
+          "period",
+          "reading_id",
+          "source_id",
+          "verification"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "engine_ccm": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "engine_raw": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "expected_km_2022": {
+            "type": [
+              "null",
+              "number",
+              "string"
+            ]
+          },
+          "first_registration_raw": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "invoice_note": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "next_service": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "rental_contract": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "rental_excess_km_raw": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "rental_km_raw": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "rental_monthly_net": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "repairs": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "road_tax_legacy": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "service": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "service_provider": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "stk_action": {
+            "type": "string"
+          },
+          "stk_date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "stk_raw": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "stk_verification": {
+            "type": "string"
+          },
+          "summer_tires": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "tenant": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "tires": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "vignette_date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "vignette_raw": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "vignette_verification": {
+            "type": "string"
+          },
+          "warranty_or_service_notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "wheels": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "winter_tires": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "required": [
+          "asset_id",
+          "engine_ccm",
+          "engine_raw",
+          "expected_km_2022",
+          "first_registration_raw",
+          "invoice_note",
+          "next_service",
+          "notes",
+          "rental_contract",
+          "rental_excess_km_raw",
+          "rental_km_raw",
+          "rental_monthly_net",
+          "repairs",
+          "road_tax_legacy",
+          "service",
+          "service_provider",
+          "source_id",
+          "stk_action",
+          "stk_date",
+          "stk_raw",
+          "stk_verification",
+          "summer_tires",
+          "tenant",
+          "tires",
+          "vignette_date",
+          "vignette_raw",
+          "vignette_verification",
+          "warranty_or_service_notes",
+          "wheels",
+          "winter_tires"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "premium_lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "child_policy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "due_date": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "payment_state": {
+            "type": "string"
+          },
+          "period_from": {
+            "type": "string"
+          },
+          "period_to": {
+            "type": "string"
+          },
+          "policy": {
+            "type": "string"
+          },
+          "premium_id": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "asset_id",
+          "child_policy",
+          "currency",
+          "due_date",
+          "kind",
+          "location",
+          "notes",
+          "payment_state",
+          "period_from",
+          "period_to",
+          "policy",
+          "premium_id",
+          "source_id"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "rides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "association": {
+            "type": "string"
+          },
+          "book_plate": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "distance": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "location": {
+            "type": "string"
+          },
+          "odometer_from": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "odometer_to": {
+            "type": "number"
+          },
+          "purpose": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "raw_date": {
+            "type": "string"
+          },
+          "ride_id": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "row": {
+            "type": "number"
+          },
+          "sheet": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "association",
+          "book_plate",
+          "date",
+          "distance",
+          "location",
+          "odometer_from",
+          "odometer_to",
+          "purpose",
+          "raw_date",
+          "ride_id",
+          "route",
+          "row",
+          "sheet",
+          "source_id"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_master_modified": {
+      "type": "string"
+    },
+    "source_observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "cell": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          },
+          "observation_id": {
+            "type": "string"
+          },
+          "row": {
+            "type": "number"
+          },
+          "sheet": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "value_type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "cell",
+          "context",
+          "field",
+          "observation_id",
+          "row",
+          "sheet",
+          "source_id",
+          "value",
+          "value_type"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "drive_file_id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gmail_message_id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "kind": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "source_date": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "drive_file_id",
+          "gmail_message_id",
+          "kind",
+          "notes",
+          "sha256",
+          "source_date",
+          "source_id",
+          "title",
+          "url"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "vehicles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "asset_state": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "historic_insurance": {
+            "type": "object",
+            "properties": {
+              "binding_limit_confirmed": {
+                "type": "boolean"
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "declared_km_per_year": {
+                "type": "number"
+              },
+              "effective_date": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "raw_km": {
+                "type": "string"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "value_text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "binding_limit_confirmed",
+              "coverage",
+              "declared_km_per_year",
+              "effective_date",
+              "location",
+              "notes",
+              "raw_km",
+              "source_id",
+              "value_text"
+            ],
+            "additionalProperties": true
+          },
+          "insurance": {
+            "type": "object",
+            "properties": {
+              "anniversary_month_day": {
+                "type": "string"
+              },
+              "annual_premium": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              },
+              "binding_km_limit": {
+                "type": "null"
+              },
+              "binding_km_status": {
+                "type": "string"
+              },
+              "broker": {
+                "type": "string"
+              },
+              "broker_contact": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "child_policy": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "contract_end_confirmed": {
+                "type": "null"
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "insurance_company": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "operator": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "operator_ic": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "owner": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "owner_ic": {
+                "type": "string"
+              },
+              "paid_state": {
+                "type": "string"
+              },
+              "period_from": {
+                "type": "string"
+              },
+              "period_semantics": {
+                "type": "string"
+              },
+              "period_to": {
+                "type": "string"
+              },
+              "policy": {
+                "type": "string"
+              },
+              "policyholder": {
+                "type": "string"
+              },
+              "q4_premium": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "anniversary_month_day",
+              "annual_premium",
+              "binding_km_limit",
+              "binding_km_status",
+              "broker",
+              "broker_contact",
+              "child_policy",
+              "contract_end_confirmed",
+              "coverage",
+              "insurance_company",
+              "notes",
+              "operator",
+              "owner",
+              "paid_state",
+              "period_from",
+              "period_semantics",
+              "period_to",
+              "policy",
+              "policyholder",
+              "q4_premium",
+              "source_ids"
+            ],
+            "additionalProperties": true
+          },
+          "last_reading": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "asset_id": {
+                "type": "string"
+              },
+              "date": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "km": {
+                "type": "number"
+              },
+              "location": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "period": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "reading_id": {
+                "type": "string"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "verification": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "asset_id",
+              "date",
+              "km",
+              "location",
+              "notes",
+              "period",
+              "reading_id",
+              "source_id",
+              "verification"
+            ],
+            "additionalProperties": true
+          },
+          "master_owner": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "master_state": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "model": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "raw": {
+            "type": "array",
+            "items": {
+              "type": [
+                "null",
+                "number",
+                "string"
+              ]
+            }
+          },
+          "registration_candidates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registration_country": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "rz": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source_model": {
+            "type": "string"
+          },
+          "source_name": {
+            "type": "string"
+          },
+          "source_row": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "source_rz": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "source_sheet": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "source_vin": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "uuid": {
+            "type": "string"
+          },
+          "verification": {
+            "type": "string"
+          },
+          "vin": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "required": [
+          "asset_id",
+          "asset_state",
+          "brand",
+          "category",
+          "last_reading",
+          "master_owner",
+          "master_state",
+          "model",
+          "name",
+          "notes",
+          "raw",
+          "registration_country",
+          "rz",
+          "source_ids",
+          "source_model",
+          "source_name",
+          "source_row",
+          "source_rz",
+          "source_sheet",
+          "source_vin",
+          "uuid",
+          "verification",
+          "vin"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": [
+    "acquisitions",
+    "as_of",
+    "billing_reconciliation",
+    "data_quality_note",
+    "insurance",
+    "issues",
+    "native_sheet",
+    "odometer_readings",
+    "operations",
+    "premium_lines",
+    "rides",
+    "schema_version",
+    "source_master_modified",
+    "source_observations",
+    "sources",
+    "timezone",
+    "title",
+    "unknowns",
+    "vehicles"
+  ],
+  "additionalProperties": true,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fleet source snapshot, not authoritative current fleet"
+}

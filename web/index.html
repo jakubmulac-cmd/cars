@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#153d39">
+  <meta name="description" content="Soukromý přehled vozidel, pojištění a ověřovacích úkolů.">
+  <title>Cars · Soukromá evidence</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Přejít k obsahu</a>
+  <section id="auth-screen" class="auth-screen" hidden>
+    <div class="auth-story">
+      <a class="brand brand-light" href="#"><span class="brand-mark">c</span> cars<span class="brand-dot">.</span></a>
+      <div class="auth-story-body"><span class="eyebrow">VÁŠ VOZOVÝ PARK</span><h1>Všechna vozidla.<br>Jeden přehled.</h1><p>Doklady, pojištění a důležité termíny.<br>Vše na jednom soukromém místě.</p><div class="road-art" aria-hidden="true"><span></span><span></span><span></span><i></i></div></div>
+      <p class="auth-foot">Méně hledání. Více přehledu.</p>
+    </div>
+    <div class="auth-panel"><form id="auth-form" class="auth-form">
+      <span class="eyebrow">SOUKROMÁ EVIDENCE</span><h2 id="auth-title">Vítejte zpět</h2><p id="auth-description">Přihlaste se ke svému přehledu vozidel.</p>
+      <label for="password">Přístupové heslo</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="256">
+      <p id="auth-error" class="form-error" role="alert"></p><button type="submit" class="button primary wide" id="auth-submit">Přihlásit se <span aria-hidden="true">→</span></button>
+      <p class="form-help">Vaše vozidla a podklady jsou dostupné až po přihlášení.</p>
+    </form></div>
+  </section>
+  <div id="application" class="app-shell" hidden>
+    <aside class="sidebar">
+      <a href="#overview" class="brand"><span class="brand-mark">c</span> cars<span class="brand-dot">.</span></a>
+      <p class="nav-label">VOZOVÝ PARK</p>
+      <nav aria-label="Hlavní navigace">
+        <a href="#overview" data-page="overview"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Přehled</a>
+        <a href="#vehicles" data-page="vehicles"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 7 2-3h10l2 3 2 2v8H3V9l2-2Z"/><path d="M5 7h14M7 17v3m10-3v3M6 12h2m8 0h2"/></svg></span>Vozidla<span id="nav-vehicles" class="nav-count">–</span></a>
+        <a href="#issues" data-page="issues"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7 12 3 3 7-7"/></svg></span>Úkoly<span id="nav-issues" class="nav-count">–</span></a>
+        <a href="#insurance" data-page="insurance"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m8 12 3 3 5-6"/></svg></span>Pojištění</a>
+        <a href="#sources" data-page="sources"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6V3Z"/><path d="M14 3v5h4M9 12h6m-6 4h6"/></svg></span>Podklady</a>
+        <a href="#settings" data-page="settings"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg></span>Připojení a data</a>
+      </nav>
+      <div class="sidebar-bottom"><div class="privacy-note"><span class="status-dot"></span> Soukromý prostor</div><button id="logout" class="logout">Odhlásit se <span aria-hidden="true">→</span></button></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><span class="breadcrumb">Vozový park <span>/</span> <b id="breadcrumb-page">Přehled</b></span><div class="topbar-right"><span class="private-badge">Soukromá evidence</span><span class="avatar" aria-label="Správce">S</span></div></header>
+      <main id="main" tabindex="-1"><div id="page-content"></div></main>
+      <footer class="app-footer"><span>Cars · Evidence s dohledatelnými podklady</span><span id="snapshot-footer"></span></footer>
+    </div>
+  </div>
+  <div id="loading" class="loading">Načítání soukromého přehledu…</div>
+  <dialog id="details" class="detail-dialog" aria-label="Detail vozidla"><div id="detail-content"></div></dialog>
+  <dialog id="action-dialog" class="action-dialog" aria-label="Úprava evidence"><div id="action-content"></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

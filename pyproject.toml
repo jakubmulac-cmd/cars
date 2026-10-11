@@ -1,0 +1,13 @@
+[project]
+name = "cars-private-fleet"
+version = "0.1.0"
+description = "Soukromý přehled vozidel, pojistných podkladů a ověřovacích úkolů"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "fastapi==0.141.1",
+    "uvicorn==0.52.1",
+    "jsonschema==4.26.0",
+]
+
+[dependency-groups]
+dev = ["httpx==0.28.1"]
