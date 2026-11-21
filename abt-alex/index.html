@@ -1,0 +1,172 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>ALEX · Příjmy a výdaje</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7f6;color:#21372d;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}header{position:sticky;top:0;background:#fff;border-bottom:1px solid #dfe8e1;padding:9px 10px;z-index:5}header h1{font-size:16px;margin:0}header small{font-size:10px;color:#78887c}main{max-width:1100px;margin:auto;display:flex;flex-direction:column;gap:12px;padding:8px}.group{min-width:0}.group h2{font-size:14px;margin:2px 3px 8px}.item{background:white;border:1px solid #e1e9e3;border-radius:7px;padding:7px;margin-bottom:5px}.head{display:flex;justify-content:space-between;gap:5px}.head strong{font-size:12px;line-height:1.2}.head small{font-size:10px;color:#879589;white-space:nowrap}.desc{font-size:10px;color:#61766a;line-height:1.25;margin:4px 0 5px;min-height:24px}.edit{display:grid;grid-template-columns:minmax(0,1fr) 91px;gap:4px}.amount{display:flex;align-items:center;border:1px solid #dce5df;border-radius:5px;min-width:0;height:28px}.amount input{width:100%;min-width:0;border:0;padding:4px 3px;text-align:right;background:transparent;font:700 12px inherit;color:#203c2e}.amount span{padding-right:4px;font-size:10px;color:#5f7568}.edit select{min-width:0;width:100%;height:28px;border:1px solid #dce5df;border-radius:5px;background:#f9fbf9;font-size:11px;color:#365b43}.note{display:flex;gap:4px;margin-top:5px}.note input{flex:1;min-width:0;height:26px;border:1px solid #e1e8e2;border-radius:5px;padding:4px 5px;font-size:11px}.note button{height:26px;border:1px solid #cbded0;border-radius:5px;background:#eff6ef;color:#2e6944;font-size:10px;padding:0 6px}.item .indicator{font-size:9px;min-height:10px;color:#458454;margin-top:2px}.item .indicator.bad{color:#b33d3d}#connection{font-size:10px;color:#64796b;margin-top:3px}.good{color:#317a4b!important}.bad{color:#b43c3c!important}input:focus,select:focus{outline:2px solid #9dbfaa;outline-offset:0}@media(max-width:410px){main{gap:5px;padding:5px}.item{padding:5px;margin-bottom:4px}.head strong{font-size:11px}.desc{font-size:9px;min-height:32px}.edit{grid-template-columns:minmax(0,1fr) 80px;gap:3px}.amount input{font-size:11px}.edit select{font-size:10px}.note input{font-size:10px}}@media(min-width:800px){.item{padding:10px}.desc{font-size:11px;min-height:15px}} 
+
+/* Čitelnější mobilní finanční přehled */
+body{font-size:14px}
+header h1{font-size:19px}
+.group h2{font-size:20px;margin:5px 4px 9px;font-weight:800}
+.group.in h2{color:#176a36}
+.group.out h2{color:#a32831}
+.item{padding:11px 10px;margin-bottom:7px;border-radius:9px}
+.group.in .item{background:#edfaef;border-color:#b7dfc1}
+.group.out .item{background:#fff0f1;border-color:#f0bfc4}
+.head strong{font-size:16px;font-weight:800;line-height:1.3}
+.head small{font-size:12px}
+.desc{font-size:13px;line-height:1.35;color:#4d6656;min-height:0;margin:4px 0 8px}
+.group.out .desc{color:#785759}
+.amount{height:36px;background:#fff;border-color:#c7d8cc}
+.amount input{font-family:inherit;font-size:17px;font-weight:800;letter-spacing:.01em;color:#19382c}
+.amount span{font-size:13px;padding-right:7px}
+.edit{grid-template-columns:minmax(0,1fr) 124px;gap:7px}
+.edit select{height:36px;font-size:14px;background:#fff}
+.note{gap:6px;margin-top:7px}
+.note input{height:34px;font-size:14px;background:#fff;padding:6px 8px}
+.note button{height:34px;font-size:13px;font-weight:700;padding:0 10px}
+.item .indicator{font-size:11px}
+#connection{font-size:12px;line-height:1.3}
+@media(max-width:410px){
+main{gap:9px;padding:7px}
+.item{padding:9px 8px;margin-bottom:6px}
+.head strong{font-size:16px}
+.desc{font-size:12px;min-height:0}
+.edit{grid-template-columns:minmax(0,1fr) 112px;gap:5px}
+.amount input{font-size:16px}
+.edit select{font-size:13px}
+.note input{font-size:13px}
+}
+
+/* Barva výhradně podle skutečně uloženého stavu, nikoli podle typu platby */
+.group.in .item,.group.out .item{background:#fff;border-color:#e0e5e1}
+.group.in .item.done,.group.out .item.done{background:#e8f7eb;border-color:#89c99b}
+.item .status-check{display:none;flex-shrink:0;color:#17803c;font-size:21px;line-height:1;font-weight:900;margin-left:5px}
+.item.done .status-check{display:inline-block}
+.title-input{flex:1;min-width:0;width:100%;font:800 16px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;border:1px solid transparent;background:transparent;padding:2px 4px;color:#21372d}.head{align-items:center}.add-toggle{display:block;width:36px;height:36px;font-size:28px;color:#166c34;background:#e5f7e9;border:1px solid #afd7b8;border-radius:8px;margin-bottom:8px}.add-form{display:grid;gap:7px;padding:10px;border:1px solid #a7d0b1;background:#fff;border-radius:8px;margin-bottom:9px}.add-form[hidden]{display:none}.add-form input,.add-form select{height:37px;width:100%;min-width:0;background:white;border:1px solid #c8d9ce;border-radius:6px;padding:5px;font-size:14px}.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.add-actions{display:flex;gap:6px}.add-actions button{padding:8px;background:#e2f5e8;border:1px solid #a5cfb2;border-radius:6px}.add-error{color:#a22}.group .item:not(.done){background:#fff!important;border-color:#e0e5e1!important}.group .item.done{background:#dbf5e2!important;border-color:#74be88!important}</style></head><body><header><h1>ALEX · Příjmy / výdaje</h1><button id="refresh" type="button" style="float:right;margin-top:-21px;border:1px solid #d5e5da;background:#f4faf5;border-radius:5px;padding:4px 8px;font-size:10px">Obnovit</button><div id="connection">Načítám sdílené údaje…</div></header><main id="main"><section class="group in"><h2>Příjmy</h2><article class="item" data-id="a_rs6_120"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="RS6"><span class="status-check">✓</span><small>16.11.</small></div><div class="desc">Plánovaná platba 120 tisíc EUR za RS6.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="120 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="a_rsq8_70"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="RSQ8 – první část"><span class="status-check">✓</span><small>20.11.</small></div><div class="desc">První část platby za RSQ8 z rozpisu 70 + 100 tisíc EUR.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="70 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="a_rsq8_100"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="RSQ8 – druhá část"><span class="status-check">✓</span><small>20.11.</small></div><div class="desc">Druhá část platby za RSQ8, společně s první činí 170 tisíc EUR.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="100 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item done" data-id="p100"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Hotovost – kupní cena"><span class="status-check">✓</span><small>19.11.</small></div><div class="desc">Hotovostní splátka kupní ceny přijatá 19. listopadu.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="100 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno" selected>Provedeno</option><option value="ceka">Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="p300"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Hotovost – očekáváno"><span class="status-check">✓</span><small>20.11.</small></div><div class="desc">Očekávaná hotovostní splátka kupní ceny, přijetí zatím nepotvrzeno.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="300 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item done" data-id="p_transfer_2111"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Přijato – ALEX"><span class="status-check">✓</span><small>21.11.2026</small></div><div class="desc">Přijato 400 000 € dne 21. listopadu 2026.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="400 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno" selected>Provedeno</option><option value="ceka">Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="p_target_2412"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Zbývá doplatit – ALEX"><span class="status-check">✓</span><small>do 24.12.</small></div><div class="desc">Zbývá doplatit 2 800 000 € a dokončit transakci i převod podílu do 24.12.2026.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="2 800 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="a_dubai_500"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Dubaj – převod"><span class="status-check">✓</span><small>16.11.</small></div><div class="desc">Po podpisu smlouvy měl následovat převod 500 tisíc EUR z Dubaje.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="500 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="a_firma_300"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Platba firmě"><span class="status-check">✓</span><small>23.11.</small></div><div class="desc">Platba 300 tisíc EUR firmě s termínem přesunutým na 23. listopadu.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="300 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="a_december"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Vše uhrazeno – cíl"><span class="status-check">✓</span><small>12/2026</small></div><div class="desc">Cílem harmonogramu je úplné vypořádání během prosince 2026.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="0"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article></section><section class="group out"><h2>Výdaje</h2><article class="item" data-id="h500"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Hirschler – rámec"><span class="status-check">✓</span><small>—</small></div><div class="desc">Souhrnná expozice vůči Hirschlerovi uváděná v eurech.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="500 000"><span>EUR</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="h7500"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Hirschler – financování 1"><span class="status-check">✓</span><small>—</small></div><div class="desc">První evidovaná korunová část financování od Hirschlera.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="7 500 000"><span>CZK</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="h4000"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Hirschler – financování 2"><span class="status-check">✓</span><small>—</small></div><div class="desc">Druhá evidovaná korunová část financování od Hirschlera.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="4 000 000"><span>CZK</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="h2000"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Hirschler – financování 3"><span class="status-check">✓</span><small>—</small></div><div class="desc">Třetí evidovaná korunová část financování od Hirschlera.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="2 000 000"><span>CZK</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article><article class="item" data-id="z8000"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="Žáček – financování"><span class="status-check">✓</span><small>—</small></div><div class="desc">Financování 8 milionů Kč evidované ve vztahu k Janu Klimentovi.</div><div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="8 000 000"><span>CZK</span></label><select aria-label="Stav"><option value="provedeno">Provedeno</option><option value="ceka" selected>Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000"><button type="button" class="save" disabled>Uložit vše</button></div><div class="indicator"></div></article></section></main><script>
+const ITEMS=[["a_rs6_120","in","16.11.","RS6",120000,"EUR","ceka","Plánovaná platba 120 tisíc EUR za RS6."],["a_rsq8_70","in","20.11.","RSQ8 – první část",70000,"EUR","ceka","První část platby za RSQ8 z rozpisu 70 + 100 tisíc EUR."],["a_rsq8_100","in","20.11.","RSQ8 – druhá část",100000,"EUR","ceka","Druhá část platby za RSQ8, společně s první činí 170 tisíc EUR."],["p100","in","19.11.","Hotovost – kupní cena",100000,"EUR","provedeno","Hotovostní splátka kupní ceny přijatá 19. listopadu."],["p300","in","20.11.","Hotovost – očekáváno",300000,"EUR","ceka","Očekávaná hotovostní splátka kupní ceny, přijetí zatím nepotvrzeno."],["p_transfer_2111","in","21.11.2026","Přijato – ALEX",400000,"EUR","provedeno","Přijato 400 000 € dne 21. listopadu 2026."],["p_target_2412","in","do 24.12.","Zbývá doplatit – ALEX",2800000,"EUR","ceka","Zbývá doplatit 2 800 000 € a dokončit transakci i převod podílu do 24.12.2026."],["a_dubai_500","in","16.11.","Dubaj – převod",500000,"EUR","ceka","Po podpisu smlouvy měl následovat převod 500 tisíc EUR z Dubaje."],["a_firma_300","in","23.11.","Platba firmě",300000,"EUR","ceka","Platba 300 tisíc EUR firmě s termínem přesunutým na 23. listopadu."],["a_december","in","12/2026","Vše uhrazeno – cíl",0,"EUR","ceka","Cílem harmonogramu je úplné vypořádání během prosince 2026."],["h500","out","—","Hirschler – rámec",500000,"EUR","ceka","Souhrnná expozice vůči Hirschlerovi uváděná v eurech."],["h7500","out","—","Hirschler – financování 1",7500000,"CZK","ceka","První evidovaná korunová část financování od Hirschlera."],["h4000","out","—","Hirschler – financování 2",4000000,"CZK","ceka","Druhá evidovaná korunová část financování od Hirschlera."],["h2000","out","—","Hirschler – financování 3",2000000,"CZK","ceka","Třetí evidovaná korunová část financování od Hirschlera."],["z8000","out","—","Žáček – financování",8000000,"CZK","ceka","Financování 8 milionů Kč evidované ve vztahu k Janu Klimentovi."]];
+const BASE="https://c--c4296fe3-6549-4477-bdfd-936af88bf021-prod.lovable.cloud";
+const KEY="sb_publishable_Ddahqy6FWHovyP6J8o03cg_Qhcrh0Sl";
+const $=s=>document.querySelector(s);
+const safe=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}).format(Number(n)).replace(/[\u00a0\u202f]/g," ");
+const dbSelect="id,amount,status,comment,item_name,section_type,currency_code,date_text,item_description,sort_position,is_custom";
+const states={};
+let customItems=[];
+let ready=false;
+const activeSaves=new Set();
+function parseNumber(raw){
+ const compact=String(raw).trim().replace(/\s/g,"").replace(",",".");
+ if(!/^\d+(\.\d{1,2})?$/.test(compact)||Number(compact)>=1e12)throw Error("Částka musí být nezáporné číslo s nejvýše dvěma desetinnými místy.");
+ return Number(compact);
+}
+function cleanName(raw){const s=String(raw).trim();if(!s||s.length>180)throw Error("Název musí mít 1 až 180 znaků.");return s;}
+function rowHtml(r){
+ const [id,g,date,name,amount,currency,status,description]=r;
+ const v=states[id]||{amount,status,comment:"",item_name:name};
+ const shownName=v.item_name||name;
+ const opts=[["provedeno","Provedeno"],["ceka","Čeká se"],["nesplneno","Nesplněno"]].map(([value,label])=>'<option value="'+value+'"'+(v.status===value?' selected':'')+'>'+label+'</option>').join("");
+ const desc=description?'<div class="desc">'+safe(description)+'</div>':"";
+ return '<article class="item'+(v.status==="provedeno"?" done":"")+'" data-id="'+safe(id)+'"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="'+safe(shownName)+'" title="Klepnutím upravíte název"><span class="status-check" aria-label="Provedeno" title="Provedeno">✓</span><small>'+safe(date)+'</small></div>'+desc+'<div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="'+money(v.amount)+'"><span>'+safe(currency)+'</span></label><select aria-label="Stav">'+opts+'</select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000" value="'+safe(v.comment||"")+'"><button type="button" class="save">Uložit vše</button></div><div class="indicator"></div></article>';
+}
+function notice(el,msg,isError=false){
+ const node=el.querySelector(".indicator");node.textContent=msg;node.className="indicator"+(isError?" bad":"");
+}
+function styleDone(el,done){el.classList.toggle("done",done);el.style.setProperty("background-color",done?"#dbf5e2":"#fff","important");el.style.setProperty("border-color",done?"#74be88":"#e0e5e1","important");}
+async function api(path,method="GET",body){
+ const resp=await fetch(BASE+"/rest/v1/"+path,{method,cache:"no-store",headers:{"apikey":KEY,"Accept":"application/json","Content-Type":"application/json",...(["PATCH","POST"].includes(method)?{"Prefer":"return=representation"}:{})},...(body===undefined?{}:{body:JSON.stringify(body)})});
+ const txt=await resp.text();
+ if(!resp.ok){let e=txt;try{e=JSON.parse(txt).message||txt}catch{}throw Error(e.slice(0,240))}
+ return txt?JSON.parse(txt):[];
+}
+function render(){
+ const all=[...customItems,...ITEMS];
+ $("#main").innerHTML=["in","out"].map(group=>{
+  const add=group==="in"?'<button type="button" class="add-toggle" id="add-toggle" aria-label="Přidat příjem" title="Přidat příjem">+</button><form id="add-form" class="add-form" hidden><input id="add-name" required maxlength="180" placeholder="Název nové položky"><div class="add-grid"><input id="add-amount" required inputmode="decimal" placeholder="Částka"><select id="add-currency"><option value="EUR">EUR</option><option value="CZK">CZK</option></select></div><div class="add-grid"><input id="add-date" placeholder="Datum / termín"><select id="add-status"><option value="ceka">Čeká se</option><option value="provedeno">Provedeno</option><option value="nesplneno">Nesplněno</option></select></div><input id="add-comment" maxlength="2000" placeholder="Komentář (volitelný)"><div class="add-actions"><button type="submit" id="add-save">Přidat položku</button><button type="button" class="cancel" id="add-cancel">Zrušit</button></div><div class="add-error" id="add-error"></div></form>':"";
+  return '<section class="group '+group+'"><h2>'+(group==="in"?"Příjmy":"Výdaje")+'</h2>'+add+all.filter(r=>r[1]===group).map(rowHtml).join("")+'</section>';
+ }).join("");
+ for(const el of document.querySelectorAll(".item")){
+  const btn=el.querySelector(".save");btn.disabled=!ready;
+  btn.addEventListener("click",()=>saveItem(el));
+  const mark=()=>notice(el,"Neuložené změny – stiskněte Uložit vše");
+  el.querySelector(".title-input").addEventListener("input",mark);
+  el.querySelector(".amount input").addEventListener("input",mark);
+  el.querySelector(".note input").addEventListener("input",mark);
+  el.querySelector("select").addEventListener("change",()=>{styleDone(el,el.querySelector("select").value==="provedeno");mark()});
+ }
+ if($("#add-toggle")){
+  $("#add-toggle").disabled=!ready;
+  $("#add-toggle").addEventListener("click",()=>{const form=$("#add-form");form.hidden=!form.hidden;if(!form.hidden)$("#add-name").focus()});
+  $("#add-cancel").addEventListener("click",()=>{$("#add-form").hidden=true;$("#add-form").reset();$("#add-error").textContent=""});
+  $("#add-form").addEventListener("submit",addItem);
+ }
+}
+function copyFields(el,record){
+ el.querySelector(".title-input").value=record.item_name||"";
+ el.querySelector(".amount input").value=money(record.amount);
+ el.querySelector("select").value=record.status;
+ el.querySelector(".note input").value=record.comment||"";
+ styleDone(el,record.status==="provedeno");
+}
+async function saveItem(el){
+ const id=el.dataset.id;
+ if(!ready||activeSaves.has(id))return;
+ let body;
+ try{body={item_name:cleanName(el.querySelector(".title-input").value),amount:parseNumber(el.querySelector(".amount input").value),status:el.querySelector("select").value,comment:el.querySelector(".note input").value}}catch(e){notice(el,e.message,true);return}
+ activeSaves.add(id);const btn=el.querySelector(".save");btn.disabled=true;btn.textContent="Ukládám…";notice(el,"Ukládám do sdílené databáze…");
+ try{
+  const result=await api("alex_payment_item_states?id=eq."+encodeURIComponent(id)+"&select="+dbSelect,"PATCH",body);
+  if(result.length!==1)throw Error("Databáze nepotvrdila uložení.");
+  const verify=await api("alex_payment_item_states?id=eq."+encodeURIComponent(id)+"&select="+dbSelect);
+  if(verify.length!==1)throw Error("Změnu nelze ověřit.");
+  const v=verify[0];
+  if((v.item_name||"")!==body.item_name||Number(v.amount)!==body.amount||v.status!==body.status||(v.comment||"")!==body.comment)throw Error("Po opětovném načtení data nesouhlasí.");
+  states[id]={...v,amount:Number(v.amount)};
+  copyFields(el,states[id]);notice(el,"✓ Uloženo pro všechny");
+ }catch(e){notice(el,"CHYBA: "+e.message,true)}
+ finally{activeSaves.delete(id);btn.disabled=false;btn.textContent="Uložit vše";}
+}
+function makeId(){
+ if(typeof crypto!=="undefined"&&crypto.randomUUID)return "custom_"+crypto.randomUUID();
+ return "custom_"+Date.now()+"_"+Math.random().toString(36).slice(2,12);
+}
+async function addItem(e){
+ e.preventDefault();if(!ready)return;
+ const error=$("#add-error"),btn=$("#add-save");error.textContent="";
+ let body;
+ try{
+  body={id:makeId(),item_name:cleanName($("#add-name").value),amount:parseNumber($("#add-amount").value),status:$("#add-status").value,comment:$("#add-comment").value,section_type:"in",currency_code:$("#add-currency").value,date_text:$("#add-date").value.trim().slice(0,80),item_description:"",is_custom:true,sort_position:0};
+ }catch(err){error.textContent=err.message;return}
+ btn.disabled=true;btn.textContent="Ukládám…";
+ try{
+  const data=await api("alex_payment_item_states?select="+dbSelect,"POST",body);
+  if(data.length!==1||data[0].id!==body.id)throw Error("Vložení nebylo databází potvrzeno.");
+  const verify=await api("alex_payment_item_states?id=eq."+encodeURIComponent(body.id)+"&select="+dbSelect);
+  if(verify.length!==1)throw Error("Novou položku nelze znovu načíst.");
+  states[body.id]={...verify[0],amount:Number(verify[0].amount)};
+  customItems.unshift([body.id,"in",body.date_text,body.item_name,body.amount,body.currency_code,body.status,""]);
+  render();
+  $("#connection").textContent="Nová položka uložena do sdílené databáze";$("#connection").className="good";
+ }catch(err){error.textContent="CHYBA: "+err.message}
+ finally{btn.disabled=false;btn.textContent="Přidat položku"}
+}
+async function load(){
+ const indicator=$("#connection");indicator.className="";indicator.textContent="Načítám sdílené položky…";
+ try{
+  const result=await api("alex_payment_item_states?select="+dbSelect);
+  if(!Array.isArray(result)||!ITEMS.every(item=>result.some(row=>row.id===item[0])))throw Error("Databáze nevrátila očekávané záznamy.");
+  customItems=[];
+  const defaults=new Set(ITEMS.map(r=>r[0]));
+  for(const r of result){
+   states[r.id]={...r,amount:Number(r.amount)};
+   if(r.is_custom===true&&!defaults.has(r.id)&&r.item_name){
+    customItems.push([r.id,r.section_type==="out"?"out":"in",r.date_text||"",r.item_name,Number(r.amount),r.currency_code||"EUR",r.status,r.item_description||""]);
+   }
+  }
+  customItems.sort((a,b)=>a[0]<b[0]?1:-1);
+  ready=true;render();
+  indicator.textContent="Sdílená databáze aktivní";indicator.className="good";
+ }catch(err){ready=false;render();indicator.textContent="CHYBA databáze: "+err.message;indicator.className="bad"}
+}
+$("#refresh").addEventListener("click",load);
+render();
+load();
+
+</script></body></html>
