@@ -7,10 +7,10 @@ const KEY="sb_publishable_Ddahqy6FWHovyP6J8o03cg_Qhcrh0Sl";
 const $=s=>document.querySelector(s);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const states=Object.fromEntries(ITEMS.map(r=>[r[0],{amount:r[4],status:r[6],comment:""}]));
-function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+amt+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno">Provedeno</option><option value="ceka">Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit vše</button></div><div class="indicator"></div></article>'}
+function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+amt+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno"'+(status==="provedeno"?" selected":"")+'>Provedeno</option><option value="ceka"'+(status==="ceka"?" selected":"")+'>Čeká se</option><option value="nesplneno"'+(status==="nesplneno"?" selected":"")+'>Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit vše</button></div><div class="indicator"></div></article>'}
 $("#main").innerHTML=['in','out'].map(g=>'<section class="group"><h2>'+(g==='in'?'Příjmy':'Výdaje')+'</h2>'+ITEMS.filter(r=>r[1]===g).map(rowHtml).join('')+'</section>').join('');
 function show(el,text,bad=false){const node=el.querySelector(".indicator");node.textContent=text;node.className="indicator"+(bad?" bad":"")}
-async function request(path,method="GET",body){const res=await fetch(BASE+"/rest/v1/"+path,{method,headers:{"apikey":KEY,"Content-Type":"application/json","Accept":"application/json",...(method==="PATCH"?{"Prefer":"return=representation"}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});const t=await res.text();if(!res.ok)throw Error(t.slice(0,180));return t?JSON.parse(t):[]}
+async function request(path,method="GET",body){const res=await fetch(BASE+"/rest/v1/"+path,{method,cache:"no-store",headers:{"apikey":KEY,"Content-Type":"application/json","Accept":"application/json",...(method==="PATCH"?{"Prefer":"return=representation"}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});const t=await res.text();if(!res.ok)throw Error(t.slice(0,180));return t?JSON.parse(t):[]}
 function apply(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;const v=states[id];el.querySelector(".amount input").value=String(v.amount);el.querySelector("select").value=v.status;el.querySelector(".note input").value=v.comment||""}
 const busy=new Set();
 function readEditor(el){
@@ -30,7 +30,7 @@ async function saveAll(el){
  try{
    const result=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment","PATCH",patch);
    if(!Array.isArray(result)||result.length!==1)throw Error("Změna nebyla databází potvrzena.");
-   const verify=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment&t="+Date.now());
+   const verify=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment");
    if(!Array.isArray(verify)||verify.length!==1)throw Error("Uložení se nepodařilo zpětně ověřit.");
    const r=verify[0];
    if(Math.abs(Number(r.amount)-patch.amount)>0.001||r.status!==patch.status||(r.comment||"")!==patch.comment)throw Error("Po načtení jsou hodnoty jiné, změna nebyla potvrzena.");
@@ -59,7 +59,7 @@ async function load(){
  const indicator=$("#connection");
  indicator.textContent="Načítám společná data…";indicator.className="";
  try{
-  const result=await request("payment_item_states?select=id,amount,status,comment&t="+Date.now());
+  const result=await request("payment_item_states?select=id,amount,status,comment");
   if(!Array.isArray(result)||result.length<ITEMS.length)throw Error("Databáze nevrátila všech 14 položek.");
   for(const r of result)if(states[r.id])states[r.id]={amount:Number(r.amount),status:r.status,comment:r.comment||""};
   for(const id of Object.keys(states)){if(!busy.has(id)){apply(id);const el=document.querySelector('[data-id="'+id+'"]');show(el,"");}}
