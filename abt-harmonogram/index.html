@@ -42,47 +42,139 @@ main{gap:9px;padding:7px}
 .item.done .status-check{display:inline-block}
 .item.done .desc{color:#3d6249}
 .item.done .head strong{color:#164e2c}
-</style></head><body><header><h1>ABT · Příjmy / výdaje</h1><button id="refresh" type="button" style="float:right;margin-top:-21px;border:1px solid #d5e5da;background:#f4faf5;border-radius:5px;padding:4px 8px;font-size:10px">Obnovit</button><div id="connection">Načítám sdílené údaje…</div></header><main id="main"></main><script>
+
+/* Úprava názvů a přidávání příjmových položek */
+.title-input{display:block;width:100%;min-width:0;border:1px solid transparent;background:transparent;color:#21372d;border-radius:5px;font:800 16px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;padding:2px 4px;margin:-2px -4px;flex:1}
+.title-input:foc<script>
 const ITEMS=[["a_rs6_120","in","16.11.","RS6",120000,"EUR","ceka","Plánovaná platba 120 tisíc EUR za RS6."],["a_rsq8_70","in","20.11.","RSQ8 – první část",70000,"EUR","ceka","První část platby za RSQ8 z rozpisu 70 + 100 tisíc EUR."],["a_rsq8_100","in","20.11.","RSQ8 – druhá část",100000,"EUR","ceka","Druhá část platby za RSQ8, společně s první činí 170 tisíc EUR."],["p100","in","19.11.","Hotovost – kupní cena",100000,"EUR","provedeno","Hotovostní splátka kupní ceny přijatá 19. listopadu."],["p300","in","20.11.","Hotovost – očekáváno",300000,"EUR","ceka","Očekávaná hotovostní splátka kupní ceny, přijetí zatím nepotvrzeno."],["p_transfer_2111","in","21.11.","Převod za podíl",500000,"EUR","ceka","Dne 21.11. platba 500 000 € převodem za podíl ve společnosti."],["p_target_2412","in","do 24.12.","Doplatek a dokončení převodu",2500000,"EUR","ceka","Do 24.12. doplatit do celkové úhrady minimálně 2 500 000 € a dokončit transakci i převod podílu."],["a_dubai_500","in","16.11.","Dubaj – převod",500000,"EUR","ceka","Po podpisu smlouvy měl následovat převod 500 tisíc EUR z Dubaje."],["a_firma_300","in","23.11.","Platba firmě",300000,"EUR","ceka","Platba 300 tisíc EUR firmě s termínem přesunutým na 23. listopadu."],["a_december","in","12/2026","Vše uhrazeno – cíl",0,"EUR","ceka","Cílem harmonogramu je úplné vypořádání během prosince 2026."],["h500","out","—","Hirschler – rámec",500000,"EUR","ceka","Souhrnná expozice vůči Hirschlerovi uváděná v eurech."],["h7500","out","—","Hirschler – financování 1",7500000,"CZK","ceka","První evidovaná korunová část financování od Hirschlera."],["h4000","out","—","Hirschler – financování 2",4000000,"CZK","ceka","Druhá evidovaná korunová část financování od Hirschlera."],["h2000","out","—","Hirschler – financování 3",2000000,"CZK","ceka","Třetí evidovaná korunová část financování od Hirschlera."],["z8000","out","—","Žáček – financování",8000000,"CZK","ceka","Financování 8 milionů Kč evidované ve vztahu k Janu Klimentovi."]];
 const BASE="https://c--c4296fe3-6549-4477-bdfd-936af88bf021-prod.lovable.cloud";
 const KEY="sb_publishable_Ddahqy6FWHovyP6J8o03cg_Qhcrh0Sl";
 const $=s=>document.querySelector(s);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const formatAmount=n=>new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}).format(Number(n)).replace(/[\u00a0\u202f]/g," ");
-const states=Object.fromEntries(ITEMS.map(r=>[r[0],{amount:r[4],status:r[6],comment:""}]));
-function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item'+(status==="provedeno"?" done":"")+'" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><span class="status-check" aria-label="Provedeno" title="Provedeno">✓</span><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+formatAmount(amt)+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno"'+(status==="provedeno"?" selected":"")+'>Provedeno</option><option value="ceka"'+(status==="ceka"?" selected":"")+'>Čeká se</option><option value="nesplneno"'+(status==="nesplneno"?" selected":"")+'>Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit vše</button></div><div class="indicator"></div></article>'}
-$("#main").innerHTML=['in','out'].map(g=>'<section class="group "+g><h2>'+(g==='in'?'Příjmy':'Výdaje')+'</h2>'+ITEMS.filter(r=>r[1]===g).map(rowHtml).join('')+'</section>').join('');
-function show(el,text,bad=false){const node=el.querySelector(".indicator");node.textContent=text;node.className="indicator"+(bad?" bad":"")}
-async function request(path,method="GET",body){const res=await fetch(BASE+"/rest/v1/"+path,{method,cache:"no-store",headers:{"apikey":KEY,"Content-Type":"application/json","Accept":"application/json",...(method==="PATCH"?{"Prefer":"return=representation"}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});const t=await res.text();if(!res.ok)throw Error(t.slice(0,180));return t?JSON.parse(t):[]}
-function setDoneAppearance(el,done){
- el.classList.toggle("done",done);
- el.style.setProperty("background-color",done?"#dbf5e2":"#ffffff","important");
- el.style.setProperty("border-color",done?"#74be88":"#e0e5e1","important");
+const money=n=>new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}).format(Number(n)).replace(/[\u00a0\u202f]/g," ");
+const dbSelect="id,amount,status,comment,item_name,section_type,currency_code,date_text,item_description,sort_position,is_custom";
+const states={};
+let customItems=[];
+let ready=false;
+const activeSaves=new Set();
+function parseNumber(raw){
+ const compact=String(raw).trim().replace(/\s/g,"").replace(",",".");
+ if(!/^\d+(\.\d{1,2})?$/.test(compact)||Number(compact)>=1e12)throw Error("Částka musí být nezáporné číslo s nejvýše dvěma desetinnými místy.");
+ return Number(compact);
 }
-function apply(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;const v=states[id];el.querySelector(".amount input").value=formatAmount(v.amount);el.querySelector("select").value=v.status;setDoneAppearance(el,v.status==="provedeno");el.querySelector(".note input").value=v.comment||""}
-const busy=new Set();
-function readEditor(el){
- const raw=el.querySelector(".amount input").value.trim().replace(/\s/g,"").replace(",",".");
- if(!/^\d+(\.\d{1,2})?$/.test(raw)||Number(raw)>=1e12)throw Error("Neplatná částka. Povolena jsou maximálně dvě desetinná místa.");
- return {amount:Number(raw),status:el.querySelector("select").value,comment:el.querySelector(".note input").value};
+function cleanName(raw){const s=String(raw).trim();if(!s||s.length>180)throw Error("Název musí mít 1 až 180 znaků.");return s;}
+function rowHtml(r){
+ const [id,g,date,name,amount,currency,status,description]=r;
+ const v=states[id]||{amount,status,comment:"",item_name:name};
+ const shownName=v.item_name||name;
+ const opts=[["provedeno","Provedeno"],["ceka","Čeká se"],["nesplneno","Nesplněno"]].map(([value,label])=>'<option value="'+value+'"'+(v.status===value?' selected':'')+'>'+label+'</option>').join("");
+ const desc=description?'<div class="desc">'+safe(description)+'</div>':"";
+ return '<article class="item'+(v.status==="provedeno"?" done":"")+'" data-id="'+safe(id)+'"><div class="head"><input class="title-input" aria-label="Název položky" maxlength="180" value="'+safe(shownName)+'" title="Klepnutím upravíte název"><span class="status-check" aria-label="Provedeno" title="Provedeno">✓</span><small>'+safe(date)+'</small></div>'+desc+'<div class="edit"><label class="amount"><input aria-label="Částka" inputmode="decimal" value="'+money(v.amount)+'"><span>'+safe(currency)+'</span></label><select aria-label="Stav">'+opts+'</select></div><div class="note"><input aria-label="Vlastní komentář" placeholder="Vlastní komentář…" maxlength="2000" value="'+safe(v.comment||"")+'"><button type="button" class="save">Uložit vše</button></div><div class="indicator"></div></article>';
 }
-async function saveAll(el){
+function notice(el,msg,isError=false){
+ const node=el.querySelector(".indicator");node.textContent=msg;node.className="indicator"+(isError?" bad":"");
+}
+function styleDone(el,done){el.classList.toggle("done",done);el.style.setProperty("background-color",done?"#dbf5e2":"#fff","important");el.style.setProperty("border-color",done?"#74be88":"#e0e5e1","important");}
+async function api(path,method="GET",body){
+ const resp=await fetch(BASE+"/rest/v1/"+path,{method,cache:"no-store",headers:{"apikey":KEY,"Accept":"application/json","Content-Type":"application/json",...(["PATCH","POST"].includes(method)?{"Prefer":"return=representation"}:{})},...(body===undefined?{}:{body:JSON.stringify(body)})});
+ const txt=await resp.text();
+ if(!resp.ok){let e=txt;try{e=JSON.parse(txt).message||txt}catch{}throw Error(e.slice(0,240))}
+ return txt?JSON.parse(txt):[];
+}
+function render(){
+ const all=[...customItems,...ITEMS];
+ $("#main").innerHTML=["in","out"].map(group=>{
+  const add=group==="in"?'<button type="button" class="add-toggle" id="add-toggle" aria-label="Přidat příjem" title="Přidat příjem">+</button><form id="add-form" class="add-form" hidden><input id="add-name" required maxlength="180" placeholder="Název nové položky"><div class="add-grid"><input id="add-amount" required inputmode="decimal" placeholder="Částka"><select id="add-currency"><option value="EUR">EUR</option><option value="CZK">CZK</option></select></div><div class="add-grid"><input id="add-date" placeholder="Datum / termín"><select id="add-status"><option value="ceka">Čeká se</option><option value="provedeno">Provedeno</option><option value="nesplneno">Nesplněno</option></select></div><input id="add-comment" maxlength="2000" placeholder="Komentář (volitelný)"><div class="add-actions"><button type="submit" id="add-save">Přidat položku</button><button type="button" class="cancel" id="add-cancel">Zrušit</button></div><div class="add-error" id="add-error"></div></form>':"";
+  return '<section class="group '+group+'"><h2>'+(group==="in"?"Příjmy":"Výdaje")+'</h2>'+add+all.filter(r=>r[1]===group).map(rowHtml).join("")+'</section>';
+ }).join("");
+ for(const el of document.querySelectorAll(".item")){
+  const btn=el.querySelector(".save");btn.disabled=!ready;
+  btn.addEventListener("click",()=>saveItem(el));
+  const mark=()=>notice(el,"Neuložené změny – stiskněte Uložit vše");
+  el.querySelector(".title-input").addEventListener("input",mark);
+  el.querySelector(".amount input").addEventListener("input",mark);
+  el.querySelector(".note input").addEventListener("input",mark);
+  el.querySelector("select").addEventListener("change",()=>{styleDone(el,el.querySelector("select").value==="provedeno");mark()});
+ }
+ if($("#add-toggle")){
+  $("#add-toggle").disabled=!ready;
+  $("#add-toggle").addEventListener("click",()=>{const form=$("#add-form");form.hidden=!form.hidden;if(!form.hidden)$("#add-name").focus()});
+  $("#add-cancel").addEventListener("click",()=>{$("#add-form").hidden=true;$("#add-form").reset();$("#add-error").textContent=""});
+  $("#add-form").addEventListener("submit",addItem);
+ }
+}
+function copyFields(el,record){
+ el.querySelector(".title-input").value=record.item_name||"";
+ el.querySelector(".amount input").value=money(record.amount);
+ el.querySelector("select").value=record.status;
+ el.querySelector(".note input").value=record.comment||"";
+ styleDone(el,record.status==="provedeno");
+}
+async function saveItem(el){
  const id=el.dataset.id;
- if(busy.has(id))return;
- let patch;
- try{patch=readEditor(el)}catch(e){show(el,e.message,true);return}
- busy.add(id);
- const button=el.querySelector("button");
- button.disabled=true;button.textContent="Ukládám…";
- show(el,"Odesílám změny do databáze…");
+ if(!ready||activeSaves.has(id))return;
+ let body;
+ try{body={item_name:cleanName(el.querySelector(".title-input").value),amount:parseNumber(el.querySelector(".amount input").value),status:el.querySelector("select").value,comment:el.querySelector(".note input").value}}catch(e){notice(el,e.message,true);return}
+ activeSaves.add(id);const btn=el.querySelector(".save");btn.disabled=true;btn.textContent="Ukládám…";notice(el,"Ukládám do sdílené databáze…");
  try{
-   const result=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment","PATCH",patch);
-   if(!Array.isArray(result)||result.length!==1)throw Error("Změna nebyla databází potvrzena.");
-   const verify=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment");
-   if(!Array.isArray(verify)||verify.length!==1)throw Error("Uložení se nepodařilo zpětně ověřit.");
-   const r=verify[0];
-   if(Math.abs(Number(r.amount)-patch.amount)>0.001||r.status!==patch.status||(r.comment||"")!==patch.comment)throw Error("Po načtení jsou hodnoty jiné, změna nebyla potvrzena.");
-   states[id]={amount:Number(r.amount),status:r.status,comment:r.comment||""};
+  const result=await api("payment_item_states?id=eq."+encodeURIComponent(id)+"&select="+dbSelect,"PATCH",body);
+  if(result.length!==1)throw Error("Databáze nepotvrdila uložení.");
+  const verify=await api("payment_item_states?id=eq."+encodeURIComponent(id)+"&select="+dbSelect);
+  if(verify.length!==1)throw Error("Změnu nelze ověřit.");
+  const v=verify[0];
+  if((v.item_name||"")!==body.item_name||Number(v.amount)!==body.amount||v.status!==body.status||(v.comment||"")!==body.comment)throw Error("Po opětovném načtení data nesouhlasí.");
+  states[id]={...v,amount:Number(v.amount)};
+  copyFields(el,states[id]);notice(el,"✓ Uloženo pro všechny");
+ }catch(e){notice(el,"CHYBA: "+e.message,true)}
+ finally{activeSaves.delete(id);btn.disabled=false;btn.textContent="Uložit vše";}
+}
+function makeId(){
+ if(typeof crypto!=="undefined"&&crypto.randomUUID)return "custom_"+crypto.randomUUID();
+ return "custom_"+Date.now()+"_"+Math.random().toString(36).slice(2,12);
+}
+async function addItem(e){
+ e.preventDefault();if(!ready)return;
+ const error=$("#add-error"),btn=$("#add-save");error.textContent="";
+ let body;
+ try{
+  body={id:makeId(),item_name:cleanName($("#add-name").value),amount:parseNumber($("#add-amount").value),status:$("#add-status").value,comment:$("#add-comment").value,section_type:"in",currency_code:$("#add-currency").value,date_text:$("#add-date").value.trim().slice(0,80),item_description:"",is_custom:true,sort_position:0};
+ }catch(err){error.textContent=err.message;return}
+ btn.disabled=true;btn.textContent="Ukládám…";
+ try{
+  const data=await api("payment_item_states?select="+dbSelect,"POST",body);
+  if(data.length!==1||data[0].id!==body.id)throw Error("Vložení nebylo databází potvrzeno.");
+  const verify=await api("payment_item_states?id=eq."+encodeURIComponent(body.id)+"&select="+dbSelect);
+  if(verify.length!==1)throw Error("Novou položku nelze znovu načíst.");
+  states[body.id]={...verify[0],amount:Number(verify[0].amount)};
+  customItems.unshift([body.id,"in",body.date_text,body.item_name,body.amount,body.currency_code,body.status,""]);
+  render();
+  $("#connection").textContent="Nová položka uložena do sdílené databáze";$("#connection").className="good";
+ }catch(err){error.textContent="CHYBA: "+err.message}
+ finally{btn.disabled=false;btn.textContent="Přidat položku"}
+}
+async function load(){
+ const indicator=$("#connection");indicator.className="";indicator.textContent="Načítám sdílené položky…";
+ try{
+  const result=await api("payment_item_states?select="+dbSelect);
+  if(!Array.isArray(result)||result.length<ITEMS.length)throw Error("Databáze nevrátila očekávané záznamy.");
+  customItems=[];
+  const defaults=new Set(ITEMS.map(r=>r[0]));
+  for(const r of result){
+   states[r.id]={...r,amount:Number(r.amount)};
+   if(r.is_custom===true&&!defaults.has(r.id)&&r.item_name){
+    customItems.push([r.id,r.section_type==="out"?"out":"in",r.date_text||"",r.item_name,Number(r.amount),r.currency_code||"EUR",r.status,r.item_description||""]);
+   }
+  }
+  customItems.sort((a,b)=>a[0]<b[0]?1:-1);
+  ready=true;render();
+  indicator.textContent="Sdílená databáze aktivní";indicator.className="good";
+ }catch(err){ready=false;render();indicator.textContent="CHYBA databáze: "+err.message;indicator.className="bad"}
+}
+$("#refresh").addEventListener("click",load);
+render();
+load();
+
+</script>"};
    apply(id);
    show(el,"✓ Uloženo a znovu načteno z databáze");
  }catch(e){
