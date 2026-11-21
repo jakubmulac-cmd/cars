@@ -1,19 +1,74 @@
 <!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>ABT · Příjmy a výdaje</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f5f7f6;color:#21372d;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}header{position:sticky;top:0;background:#fff;border-bottom:1px solid #dfe8e1;padding:9px 10px;z-index:5}header h1{font-size:16px;margin:0}header small{font-size:10px;color:#78887c}main{max-width:1100px;margin:auto;display:flex;flex-direction:column;gap:12px;padding:8px}.group{min-width:0}.group h2{font-size:14px;margin:2px 3px 8px}.item{background:white;border:1px solid #e1e9e3;border-radius:7px;padding:7px;margin-bottom:5px}.head{display:flex;justify-content:space-between;gap:5px}.head strong{font-size:12px;line-height:1.2}.head small{font-size:10px;color:#879589;white-space:nowrap}.desc{font-size:10px;color:#61766a;line-height:1.25;margin:4px 0 5px;min-height:24px}.edit{display:grid;grid-template-columns:minmax(0,1fr) 91px;gap:4px}.amount{display:flex;align-items:center;border:1px solid #dce5df;border-radius:5px;min-width:0;height:28px}.amount input{width:100%;min-width:0;border:0;padding:4px 3px;text-align:right;background:transparent;font:700 12px inherit;color:#203c2e}.amount span{padding-right:4px;font-size:10px;color:#5f7568}.edit select{min-width:0;width:100%;height:28px;border:1px solid #dce5df;border-radius:5px;background:#f9fbf9;font-size:11px;color:#365b43}.note{display:flex;gap:4px;margin-top:5px}.note input{flex:1;min-width:0;height:26px;border:1px solid #e1e8e2;border-radius:5px;padding:4px 5px;font-size:11px}.note button{height:26px;border:1px solid #cbded0;border-radius:5px;background:#eff6ef;color:#2e6944;font-size:10px;padding:0 6px}.item .indicator{font-size:9px;min-height:10px;color:#458454;margin-top:2px}.item .indicator.bad{color:#b33d3d}#connection{font-size:10px;color:#64796b;margin-top:3px}.good{color:#317a4b!important}.bad{color:#b43c3c!important}input:focus,select:focus{outline:2px solid #9dbfaa;outline-offset:0}@media(max-width:410px){main{gap:5px;padding:5px}.item{padding:5px;margin-bottom:4px}.head strong{font-size:11px}.desc{font-size:9px;min-height:32px}.edit{grid-template-columns:minmax(0,1fr) 80px;gap:3px}.amount input{font-size:11px}.edit select{font-size:10px}.note input{font-size:10px}}@media(min-width:800px){.item{padding:10px}.desc{font-size:11px;min-height:15px}} 
-</style></head><body><header><h1>ABT · Příjmy / výdaje</h1><div id="connection">Načítám sdílené údaje…</div></header><main id="main"></main><script>
+</style></head><body><header><h1>ABT · Příjmy / výdaje</h1><button id="refresh" type="button" style="float:right;margin-top:-21px;border:1px solid #d5e5da;background:#f4faf5;border-radius:5px;padding:4px 8px;font-size:10px">Obnovit</button><div id="connection">Načítám sdílené údaje…</div></header><main id="main"></main><script>
 const ITEMS=[["p100","in","19.11.","Hotovost – kupní cena",100000,"EUR","provedeno","Hotovostní splátka kupní ceny přijatá 19. listopadu."],["p300","in","20.11.","Hotovost – očekáváno",300000,"EUR","ceka","Očekávaná hotovostní splátka kupní ceny, přijetí zatím nepotvrzeno."],["p2600","in","—","Zbývající kupní cena",2600000,"EUR","ceka","Souhrn zbývajících splátek kupní ceny bez stanoveného termínu."],["a_rs6_120","in","16.11.","RS6",120000,"EUR","ceka","Plánovaná platba 120 tisíc EUR za RS6."],["a_rsq8_70","in","20.11.","RSQ8 – první část",70000,"EUR","ceka","První část platby za RSQ8 z rozpisu 70 + 100 tisíc EUR."],["a_rsq8_100","in","20.11.","RSQ8 – druhá část",100000,"EUR","ceka","Druhá část platby za RSQ8, společně s první činí 170 tisíc EUR."],["a_dubai_500","in","16.11.","Dubaj – převod",500000,"EUR","ceka","Po podpisu smlouvy měl následovat převod 500 tisíc EUR z Dubaje."],["a_firma_300","in","23.11.","Platba firmě",300000,"EUR","ceka","Platba 300 tisíc EUR firmě s termínem přesunutým na 23. listopadu."],["a_december","in","12/2026","Vše uhrazeno – cíl",0,"EUR","ceka","Cílem harmonogramu je úplné vypořádání během prosince 2026."],["h500","out","—","Hirschler – rámec",500000,"EUR","ceka","Souhrnná expozice vůči Hirschlerovi uváděná v eurech."],["h7500","out","—","Hirschler – financování 1",7500000,"CZK","ceka","První evidovaná korunová část financování od Hirschlera."],["h4000","out","—","Hirschler – financování 2",4000000,"CZK","ceka","Druhá evidovaná korunová část financování od Hirschlera."],["h2000","out","—","Hirschler – financování 3",2000000,"CZK","ceka","Třetí evidovaná korunová část financování od Hirschlera."],["z8000","out","—","Žáček – financování",8000000,"CZK","ceka","Financování 8 milionů Kč evidované ve vztahu k Janu Klimentovi."]];
 const BASE="https://c--c4296fe3-6549-4477-bdfd-936af88bf021-prod.lovable.cloud";
 const KEY="sb_publishable_Ddahqy6FWHovyP6J8o03cg_Qhcrh0Sl";
 const $=s=>document.querySelector(s);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const states=Object.fromEntries(ITEMS.map(r=>[r[0],{amount:r[4],status:r[6],comment:""}]));
-function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+amt+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno">Provedeno</option><option value="ceka">Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit</button></div><div class="indicator"></div></article>'}
+function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+amt+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno">Provedeno</option><option value="ceka">Čeká se</option><option value="nesplneno">Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit vše</button></div><div class="indicator"></div></article>'}
 $("#main").innerHTML=['in','out'].map(g=>'<section class="group"><h2>'+(g==='in'?'Příjmy':'Výdaje')+'</h2>'+ITEMS.filter(r=>r[1]===g).map(rowHtml).join('')+'</section>').join('');
 function show(el,text,bad=false){const node=el.querySelector(".indicator");node.textContent=text;node.className="indicator"+(bad?" bad":"")}
 async function request(path,method="GET",body){const res=await fetch(BASE+"/rest/v1/"+path,{method,headers:{"apikey":KEY,"Content-Type":"application/json","Accept":"application/json",...(method==="PATCH"?{"Prefer":"return=representation"}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});const t=await res.text();if(!res.ok)throw Error(t.slice(0,180));return t?JSON.parse(t):[]}
 function apply(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;const v=states[id];el.querySelector(".amount input").value=String(v.amount);el.querySelector("select").value=v.status;el.querySelector(".note input").value=v.comment||""}
-async function change(el,patch){const id=el.dataset.id;show(el,"Ukládám…");try{const result=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment","PATCH",patch);if(!result.length)throw Error("Databáze nepotvrdila uložení.");states[id]={amount:Number(result[0].amount),status:result[0].status,comment:result[0].comment||""};apply(id);show(el,"Uloženo pro všechny");}catch(e){show(el,"Chyba ukládání – "+e.message,true);apply(id)}}
-document.querySelectorAll(".item").forEach(el=>{const amt=el.querySelector(".amount input");const select=el.querySelector("select");const comment=el.querySelector(".note input");amt.addEventListener("change",()=>{const raw=amt.value.trim().replace(/\s/g,"").replace(",",".");if(!/^\d+(\.\d{1,2})?$/.test(raw)||Number(raw)>=1e12){show(el,"Neplatná částka",true);apply(el.dataset.id);return}change(el,{amount:Number(raw)})});select.addEventListener("change",()=>change(el,{status:select.value}));el.querySelector("button").addEventListener("click",()=>change(el,{comment:comment.value}));comment.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();change(el,{comment:comment.value})}})});
-async function load(){try{const result=await request("payment_item_states?select=id,amount,status,comment");for(const r of result)if(states[r.id])states[r.id]={amount:Number(r.amount),status:r.status,comment:r.comment||""};for(const id of Object.keys(states))apply(id);$("#connection").textContent="Sdílená databáze připojena · změny se uchovávají pro všechny";$("#connection").className="good";}catch(e){$("#connection").textContent="Databáze nedostupná · úpravy se nyní neuloží";$("#connection").className="bad";document.querySelectorAll("input,select,button").forEach(el=>el.disabled=true)}}
+const busy=new Set();
+function readEditor(el){
+ const raw=el.querySelector(".amount input").value.trim().replace(/\\s/g,"").replace(",",".");
+ if(!/^\\d+(\\.\\d{1,2})?$/.test(raw)||Number(raw)>=1e12)throw Error("Neplatná částka. Povolena jsou maximálně dvě desetinná místa.");
+ return {amount:Number(raw),status:el.querySelector("select").value,comment:el.querySelector(".note input").value};
+}
+async function saveAll(el){
+ const id=el.dataset.id;
+ if(busy.has(id))return;
+ let patch;
+ try{patch=readEditor(el)}catch(e){show(el,e.message,true);return}
+ busy.add(id);
+ const button=el.querySelector("button");
+ button.disabled=true;button.textContent="Ukládám…";
+ show(el,"Odesílám změny do databáze…");
+ try{
+   const result=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment","PATCH",patch);
+   if(!Array.isArray(result)||result.length!==1)throw Error("Změna nebyla databází potvrzena.");
+   const verify=await request("payment_item_states?id=eq."+encodeURIComponent(id)+"&select=id,amount,status,comment&t="+Date.now());
+   if(!Array.isArray(verify)||verify.length!==1)throw Error("Uložení se nepodařilo zpětně ověřit.");
+   const r=verify[0];
+   if(Math.abs(Number(r.amount)-patch.amount)>0.001||r.status!==patch.status||(r.comment||"")!==patch.comment)throw Error("Po načtení jsou hodnoty jiné, změna nebyla potvrzena.");
+   states[id]={amount:Number(r.amount),status:r.status,comment:r.comment||""};
+   apply(id);
+   show(el,"✓ Uloženo a znovu načteno z databáze");
+ }catch(e){
+   show(el,"CHYBA: "+e.message,true);
+   // Preserve edited form values to allow retry; do not claim success.
+ }finally{
+   busy.delete(id);
+   button.disabled=false;button.textContent="Uložit vše";
+ }
+}
+document.querySelectorAll(".item").forEach(el=>{
+ const button=el.querySelector("button");
+ button.addEventListener("click",()=>saveAll(el));
+ const mark=()=>{show(el,"Neuložené změny – klepněte na Uložit vše");};
+ el.querySelector(".amount input").addEventListener("input",mark);
+ el.querySelector("select").addEventListener("change",mark);
+ const comment=el.querySelector(".note input");
+ comment.addEventListener("input",mark);
+ comment.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveAll(el)}});
+});
+async function load(){
+ const indicator=$("#connection");
+ indicator.textContent="Načítám společná data…";indicator.className="";
+ try{
+  const result=await request("payment_item_states?select=id,amount,status,comment&t="+Date.now());
+  if(!Array.isArray(result)||result.length<ITEMS.length)throw Error("Databáze nevrátila všech 14 položek.");
+  for(const r of result)if(states[r.id])states[r.id]={amount:Number(r.amount),status:r.status,comment:r.comment||""};
+  for(const id of Object.keys(states)){if(!busy.has(id)){apply(id);const el=document.querySelector('[data-id="'+id+'"]');show(el,"");}}
+  indicator.textContent="Sdílená databáze aktivní · po změně stiskněte Uložit vše";indicator.className="good";
+ }catch(e){
+  indicator.textContent="CHYBA databáze: "+e.message;indicator.className="bad";
+  document.querySelectorAll(".item button").forEach(el=>el.disabled=true);
+ }
+}
+$("#refresh").addEventListener("click",()=>load());
 load();
 </script></body></html>
