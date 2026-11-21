@@ -169,41 +169,4 @@ $("#refresh").addEventListener("click",load);
 render();
 load();
 
-</script>"};
-   apply(id);
-   show(el,"✓ Uloženo a znovu načteno z databáze");
- }catch(e){
-   show(el,"CHYBA: "+e.message,true);
-   // Preserve edited form values to allow retry; do not claim success.
- }finally{
-   busy.delete(id);
-   button.disabled=false;button.textContent="Uložit vše";
- }
-}
-document.querySelectorAll(".item").forEach(el=>{
- const button=el.querySelector("button");
- button.addEventListener("click",()=>saveAll(el));
- const mark=()=>{show(el,"Neuložené změny – klepněte na Uložit vše");};
- el.querySelector(".amount input").addEventListener("input",mark);
- el.querySelector("select").addEventListener("change",()=>{setDoneAppearance(el,el.querySelector("select").value==="provedeno");mark();});
- const comment=el.querySelector(".note input");
- comment.addEventListener("input",mark);
- comment.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveAll(el)}});
-});
-async function load(){
- const indicator=$("#connection");
- indicator.textContent="Načítám společná data…";indicator.className="";
- try{
-  const result=await request("payment_item_states?select=id,amount,status,comment");
-  if(!Array.isArray(result)||result.length<ITEMS.length)throw Error("Databáze nevrátila všech 14 položek.");
-  for(const r of result)if(states[r.id])states[r.id]={amount:Number(r.amount),status:r.status,comment:r.comment||""};
-  for(const id of Object.keys(states)){if(!busy.has(id)){apply(id);const el=document.querySelector('[data-id="'+id+'"]');show(el,"");}}
-  indicator.textContent="Sdílená databáze aktivní · po změně stiskněte Uložit vše";indicator.className="good";
- }catch(e){
-  indicator.textContent="CHYBA databáze: "+e.message;indicator.className="bad";
-  document.querySelectorAll(".item button").forEach(el=>el.disabled=true);
- }
-}
-$("#refresh").addEventListener("click",()=>load());
-load();
 </script></body></html>
