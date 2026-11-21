@@ -1,17 +1,52 @@
 <!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>ABT · Příjmy a výdaje</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f5f7f6;color:#21372d;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}header{position:sticky;top:0;background:#fff;border-bottom:1px solid #dfe8e1;padding:9px 10px;z-index:5}header h1{font-size:16px;margin:0}header small{font-size:10px;color:#78887c}main{max-width:1100px;margin:auto;display:flex;flex-direction:column;gap:12px;padding:8px}.group{min-width:0}.group h2{font-size:14px;margin:2px 3px 8px}.item{background:white;border:1px solid #e1e9e3;border-radius:7px;padding:7px;margin-bottom:5px}.head{display:flex;justify-content:space-between;gap:5px}.head strong{font-size:12px;line-height:1.2}.head small{font-size:10px;color:#879589;white-space:nowrap}.desc{font-size:10px;color:#61766a;line-height:1.25;margin:4px 0 5px;min-height:24px}.edit{display:grid;grid-template-columns:minmax(0,1fr) 91px;gap:4px}.amount{display:flex;align-items:center;border:1px solid #dce5df;border-radius:5px;min-width:0;height:28px}.amount input{width:100%;min-width:0;border:0;padding:4px 3px;text-align:right;background:transparent;font:700 12px inherit;color:#203c2e}.amount span{padding-right:4px;font-size:10px;color:#5f7568}.edit select{min-width:0;width:100%;height:28px;border:1px solid #dce5df;border-radius:5px;background:#f9fbf9;font-size:11px;color:#365b43}.note{display:flex;gap:4px;margin-top:5px}.note input{flex:1;min-width:0;height:26px;border:1px solid #e1e8e2;border-radius:5px;padding:4px 5px;font-size:11px}.note button{height:26px;border:1px solid #cbded0;border-radius:5px;background:#eff6ef;color:#2e6944;font-size:10px;padding:0 6px}.item .indicator{font-size:9px;min-height:10px;color:#458454;margin-top:2px}.item .indicator.bad{color:#b33d3d}#connection{font-size:10px;color:#64796b;margin-top:3px}.good{color:#317a4b!important}.bad{color:#b43c3c!important}input:focus,select:focus{outline:2px solid #9dbfaa;outline-offset:0}@media(max-width:410px){main{gap:5px;padding:5px}.item{padding:5px;margin-bottom:4px}.head strong{font-size:11px}.desc{font-size:9px;min-height:32px}.edit{grid-template-columns:minmax(0,1fr) 80px;gap:3px}.amount input{font-size:11px}.edit select{font-size:10px}.note input{font-size:10px}}@media(min-width:800px){.item{padding:10px}.desc{font-size:11px;min-height:15px}} 
+
+/* Čitelnější mobilní finanční přehled */
+body{font-size:14px}
+header h1{font-size:19px}
+.group h2{font-size:20px;margin:5px 4px 9px;font-weight:800}
+.group.in h2{color:#176a36}
+.group.out h2{color:#a32831}
+.item{padding:11px 10px;margin-bottom:7px;border-radius:9px}
+.group.in .item{background:#edfaef;border-color:#b7dfc1}
+.group.out .item{background:#fff0f1;border-color:#f0bfc4}
+.head strong{font-size:16px;font-weight:800;line-height:1.3}
+.head small{font-size:12px}
+.desc{font-size:13px;line-height:1.35;color:#4d6656;min-height:0;margin:4px 0 8px}
+.group.out .desc{color:#785759}
+.amount{height:36px;background:#fff;border-color:#c7d8cc}
+.amount input{font-family:inherit;font-size:17px;font-weight:800;letter-spacing:.01em;color:#19382c}
+.amount span{font-size:13px;padding-right:7px}
+.edit{grid-template-columns:minmax(0,1fr) 124px;gap:7px}
+.edit select{height:36px;font-size:14px;background:#fff}
+.note{gap:6px;margin-top:7px}
+.note input{height:34px;font-size:14px;background:#fff;padding:6px 8px}
+.note button{height:34px;font-size:13px;font-weight:700;padding:0 10px}
+.item .indicator{font-size:11px}
+#connection{font-size:12px;line-height:1.3}
+@media(max-width:410px){
+main{gap:9px;padding:7px}
+.item{padding:9px 8px;margin-bottom:6px}
+.head strong{font-size:16px}
+.desc{font-size:12px;min-height:0}
+.edit{grid-template-columns:minmax(0,1fr) 112px;gap:5px}
+.amount input{font-size:16px}
+.edit select{font-size:13px}
+.note input{font-size:13px}
+}
 </style></head><body><header><h1>ABT · Příjmy / výdaje</h1><button id="refresh" type="button" style="float:right;margin-top:-21px;border:1px solid #d5e5da;background:#f4faf5;border-radius:5px;padding:4px 8px;font-size:10px">Obnovit</button><div id="connection">Načítám sdílené údaje…</div></header><main id="main"></main><script>
 const ITEMS=[["p100","in","19.11.","Hotovost – kupní cena",100000,"EUR","provedeno","Hotovostní splátka kupní ceny přijatá 19. listopadu."],["p300","in","20.11.","Hotovost – očekáváno",300000,"EUR","ceka","Očekávaná hotovostní splátka kupní ceny, přijetí zatím nepotvrzeno."],["p2600","in","—","Zbývající kupní cena",2600000,"EUR","ceka","Souhrn zbývajících splátek kupní ceny bez stanoveného termínu."],["a_rs6_120","in","16.11.","RS6",120000,"EUR","ceka","Plánovaná platba 120 tisíc EUR za RS6."],["a_rsq8_70","in","20.11.","RSQ8 – první část",70000,"EUR","ceka","První část platby za RSQ8 z rozpisu 70 + 100 tisíc EUR."],["a_rsq8_100","in","20.11.","RSQ8 – druhá část",100000,"EUR","ceka","Druhá část platby za RSQ8, společně s první činí 170 tisíc EUR."],["a_dubai_500","in","16.11.","Dubaj – převod",500000,"EUR","ceka","Po podpisu smlouvy měl následovat převod 500 tisíc EUR z Dubaje."],["a_firma_300","in","23.11.","Platba firmě",300000,"EUR","ceka","Platba 300 tisíc EUR firmě s termínem přesunutým na 23. listopadu."],["a_december","in","12/2026","Vše uhrazeno – cíl",0,"EUR","ceka","Cílem harmonogramu je úplné vypořádání během prosince 2026."],["h500","out","—","Hirschler – rámec",500000,"EUR","ceka","Souhrnná expozice vůči Hirschlerovi uváděná v eurech."],["h7500","out","—","Hirschler – financování 1",7500000,"CZK","ceka","První evidovaná korunová část financování od Hirschlera."],["h4000","out","—","Hirschler – financování 2",4000000,"CZK","ceka","Druhá evidovaná korunová část financování od Hirschlera."],["h2000","out","—","Hirschler – financování 3",2000000,"CZK","ceka","Třetí evidovaná korunová část financování od Hirschlera."],["z8000","out","—","Žáček – financování",8000000,"CZK","ceka","Financování 8 milionů Kč evidované ve vztahu k Janu Klimentovi."]];
 const BASE="https://c--c4296fe3-6549-4477-bdfd-936af88bf021-prod.lovable.cloud";
 const KEY="sb_publishable_Ddahqy6FWHovyP6J8o03cg_Qhcrh0Sl";
 const $=s=>document.querySelector(s);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const formatAmount=n=>new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}).format(Number(n)).replace(/[\\u00a0\\u202f]/g," ");
 const states=Object.fromEntries(ITEMS.map(r=>[r[0],{amount:r[4],status:r[6],comment:""}]));
-function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+amt+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno"'+(status==="provedeno"?" selected":"")+'>Provedeno</option><option value="ceka"'+(status==="ceka"?" selected":"")+'>Čeká se</option><option value="nesplneno"'+(status==="nesplneno"?" selected":"")+'>Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit vše</button></div><div class="indicator"></div></article>'}
-$("#main").innerHTML=['in','out'].map(g=>'<section class="group"><h2>'+(g==='in'?'Příjmy':'Výdaje')+'</h2>'+ITEMS.filter(r=>r[1]===g).map(rowHtml).join('')+'</section>').join('');
+function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+formatAmount(amt)+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno"'+(status==="provedeno"?" selected":"")+'>Provedeno</option><option value="ceka"'+(status==="ceka"?" selected":"")+'>Čeká se</option><option value="nesplneno"'+(status==="nesplneno"?" selected":"")+'>Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit vše</button></div><div class="indicator"></div></article>'}
+$("#main").innerHTML=['in','out'].map(g=>'<section class="group "+g><h2>'+(g==='in'?'Příjmy':'Výdaje')+'</h2>'+ITEMS.filter(r=>r[1]===g).map(rowHtml).join('')+'</section>').join('');
 function show(el,text,bad=false){const node=el.querySelector(".indicator");node.textContent=text;node.className="indicator"+(bad?" bad":"")}
 async function request(path,method="GET",body){const res=await fetch(BASE+"/rest/v1/"+path,{method,cache:"no-store",headers:{"apikey":KEY,"Content-Type":"application/json","Accept":"application/json",...(method==="PATCH"?{"Prefer":"return=representation"}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});const t=await res.text();if(!res.ok)throw Error(t.slice(0,180));return t?JSON.parse(t):[]}
-function apply(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;const v=states[id];el.querySelector(".amount input").value=String(v.amount);el.querySelector("select").value=v.status;el.querySelector(".note input").value=v.comment||""}
+function apply(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;const v=states[id];el.querySelector(".amount input").value=formatAmount(v.amount);el.querySelector("select").value=v.status;el.querySelector(".note input").value=v.comment||""}
 const busy=new Set();
 function readEditor(el){
  const raw=el.querySelector(".amount input").value.trim().replace(/\s/g,"").replace(",",".");
