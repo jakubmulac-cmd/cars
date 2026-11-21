@@ -40,7 +40,7 @@ const BASE="https://c--c4296fe3-6549-4477-bdfd-936af88bf021-prod.lovable.cloud";
 const KEY="sb_publishable_Ddahqy6FWHovyP6J8o03cg_Qhcrh0Sl";
 const $=s=>document.querySelector(s);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const formatAmount=n=>new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}).format(Number(n)).replace(/[\\u00a0\\u202f]/g," ");
+const formatAmount=n=>new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}).format(Number(n)).replace(/[\u00a0\u202f]/g," ");
 const states=Object.fromEntries(ITEMS.map(r=>[r[0],{amount:r[4],status:r[6],comment:""}]));
 function rowHtml(r){const [id,g,date,name,amt,cur,status,description]=r;return '<article class="item" data-id="'+id+'"><div class="head"><strong>'+safe(name)+'</strong><small>'+safe(date)+'</small></div><div class="desc">'+safe(description)+'</div><div class="edit"><label class="amount"><input aria-label="Částka '+safe(name)+'" inputmode="decimal" value="'+formatAmount(amt)+'"><span>'+cur+'</span></label><select aria-label="Stav '+safe(name)+'"><option value="provedeno"'+(status==="provedeno"?" selected":"")+'>Provedeno</option><option value="ceka"'+(status==="ceka"?" selected":"")+'>Čeká se</option><option value="nesplneno"'+(status==="nesplneno"?" selected":"")+'>Nesplněno</option></select></div><div class="note"><input aria-label="Komentář '+safe(name)+'" placeholder="Vlastní komentář…" maxlength="2000"><button type="button">Uložit vše</button></div><div class="indicator"></div></article>'}
 $("#main").innerHTML=['in','out'].map(g=>'<section class="group "+g><h2>'+(g==='in'?'Příjmy':'Výdaje')+'</h2>'+ITEMS.filter(r=>r[1]===g).map(rowHtml).join('')+'</section>').join('');
