@@ -14,8 +14,8 @@ async function request(path,method="GET",body){const res=await fetch(BASE+"/rest
 function apply(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;const v=states[id];el.querySelector(".amount input").value=String(v.amount);el.querySelector("select").value=v.status;el.querySelector(".note input").value=v.comment||""}
 const busy=new Set();
 function readEditor(el){
- const raw=el.querySelector(".amount input").value.trim().replace(/\\s/g,"").replace(",",".");
- if(!/^\\d+(\\.\\d{1,2})?$/.test(raw)||Number(raw)>=1e12)throw Error("Neplatná částka. Povolena jsou maximálně dvě desetinná místa.");
+ const raw=el.querySelector(".amount input").value.trim().replace(/\s/g,"").replace(",",".");
+ if(!/^\d+(\.\d{1,2})?$/.test(raw)||Number(raw)>=1e12)throw Error("Neplatná částka. Povolena jsou maximálně dvě desetinná místa.");
  return {amount:Number(raw),status:el.querySelector("select").value,comment:el.querySelector(".note input").value};
 }
 async function saveAll(el){
